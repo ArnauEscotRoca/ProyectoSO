@@ -1,0 +1,24 @@
+void UltimaPartida () {
+	printf ("Vamos a buscar la ultima partida que se jugo y cuantas veces aparecio cada prueba, que pruebas eran y cuantos puntos daban.\n");
+
+	err=mysql_query (conn, "SELECT Pruebas.Nombre, Juegos.Cantidad, Pruebas.Puntos FROM (Juegos, Pruebas, Historial) WHERE Juegos.idP = SELECT MAX(Historial.idP) FROM (Historial) AND Juegos.idPb = Pruebas.idPb");
+		if (err!=0) {
+		printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+		exit (1);
+		}
+
+	resultado = mysql_store_result (conn);
+
+	row = mysql_fetch_row (resultado);
+
+	if (row == NULL)
+		printf ("No se han obtenido datos en la consulta\n");
+	else
+		while (row !=NULL) {
+	cantidad = atoi (row[1]);
+	puntos = atoi (row[2]);
+
+	printf ("La prueba: %s, se ha jugado %d veces y da: %d puntos\n", row[0], cantidad, puntos);
+
+	row = mysql_fetch_row (resultado);
+}
